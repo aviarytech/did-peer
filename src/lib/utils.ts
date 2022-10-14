@@ -4,6 +4,8 @@ import type { IDIDDocumentServiceDescriptor } from "./interfaces";
 
 export const encodeService = (service: IDIDDocumentServiceDescriptor): string => {
     let encoded = JSON.stringify(service)
-    Object.keys(ServiceReplacements).forEach((k: string) => encoded.replace(k, ServiceReplacements[k]] ))
+    Object.values(ServiceReplacements).forEach((v: string, idx: number) => {
+        encoded = encoded.replace(Object.keys(ServiceReplacements)[idx], v)
+    })
     return `.${Numalgo2Prefixes.Service}${base64.encode(encoded)}`
 }
