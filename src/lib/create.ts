@@ -1,4 +1,3 @@
-import { assert } from "vitest";
 import { Numalgo2Prefixes } from "./constants";
 import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces"
 import { encodeService } from "./utils";
@@ -28,7 +27,7 @@ export const createNumAlgo0 = async (authenticationKey: IDIDDocumentVerification
 }
 
 export const createNumAlgo1 = async (): Promise<string> => {
-    return 'did:peer:...'
+    throw new Error('NumAlgo1 not supported')
 }
 
 export const createNumAlgo2 = async (

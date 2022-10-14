@@ -1,4 +1,4 @@
-import { create, createNumAlgo0, createNumAlgo2 } from '$lib';
+import { create, createNumAlgo0, createNumAlgo2 } from '../../lib';
 import { base64, Ed25519VerificationKey2020, utf8, X25519KeyAgreementKey2020 } from '@aviarytech/crypto';
 import { describe, expect, it } from 'vitest';
 
@@ -10,8 +10,12 @@ describe('create', () => {
     })
     it('should create peer:did w/ numalgo1', async () => {
         const signingKey = await Ed25519VerificationKey2020.generate();
-        const did = await create(1, [signingKey])
-        expect(did).toBeTruthy()
+        try {
+            const did = await create(1, [signingKey])
+            expect(true).toBeFalsy()
+        } catch (e: any) {
+            expect(e.message).toBe('NumAlgo1 not supported')
+        }
     })
 
     it('should create peer:did w/ numalgo2', async () => {
