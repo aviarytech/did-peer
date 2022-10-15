@@ -1,8 +1,22 @@
 import { create, createNumAlgo0, createNumAlgo2 } from '../../lib';
 import { base64, Ed25519VerificationKey2020, utf8, X25519KeyAgreementKey2020 } from '@aviarytech/crypto';
 import { describe, expect, it } from 'vitest';
+import { expectArrayEquivalence } from './test-utils';
 
 describe('create', () => {
+    it('should create numalgo0 peer:did from test vectors', async () => {
+        const inputs = require('../fixtures/peerdid-python/numalgo0-inputs.json')
+        const inputDID = require('../fixtures/peerdid-python/numalgo0-did.json')
+        const did = await create(0, inputs.signing_keys)
+        expect(did).toBe(inputDID.did)
+    })
+
+    it('should create numalgo2 peer:did from test vectors', async () => {
+        const inputs = require('../fixtures/peerdid-python/numalgo2-inputs.json')
+        const inputDID = require('../fixtures/peerdid-python/numalgo2-did.json')
+        const did = await create(2, inputs.signing_keys, inputs.encryption_keys, inputs.service)
+        expectArrayEquivalence(did.split('.'), inputDID.did.split('.'))
+    })
     it('should create peer:did w/ numalgo0', async () => {
         const signingKey = await Ed25519VerificationKey2020.generate();
         const did = await create(0, [signingKey])
@@ -42,16 +56,6 @@ describe('createNumAlgo0', () => {
             expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020')
         }
     })
-    it('should require publicKeyMultibase property', async () => {
-        let key = await Ed25519VerificationKey2020.generate();
-        try {
-            const { publicKeyMultibase, ...rest } = key;
-            const did = await createNumAlgo0(rest);
-            expect(true).toBeFalsy()
-        } catch (e: any) {
-            expect(e.message).toBe('verificationMethod must have publicKeyMultibase property')
-        }
-    })
 })
 
 describe('createNumAlgo2', () => {
@@ -70,16 +74,6 @@ describe('createNumAlgo2', () => {
             expect(true).toBeFalsy()
         } catch (e: any) {
             expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020')
-        }
-    })
-    it('should require auth key publicKeyMultibase property', async () => {
-        let key = await Ed25519VerificationKey2020.generate();
-        try {
-            const { publicKeyMultibase, ...rest } = key;
-            const did = await createNumAlgo2([rest]);
-            expect(true).toBeFalsy()
-        } catch (e: any) {
-            expect(e.message).toBe('verificationMethod must have publicKeyMultibase property')
         }
     })
     it('should create valid peer:did with NumAlgo2 with encryption', async () => {

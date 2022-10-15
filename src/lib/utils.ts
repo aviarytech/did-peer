@@ -23,10 +23,10 @@ export const decodeService = (did: string, service: string, index: number): IDID
     if (val.t) {
         if (val.t === 'dm') {
             val.type = 'DIDCommMessaging'
-            val.id = `${did}#didcomm-${index}`
+            val.id = `#didcommmessaging-${index}`
         } else {
             val.type = val.t;
-            val.id = `${did}#service-${index}`
+            val.id = `#service-${index}`
         }
         delete val['t']
     }
@@ -37,12 +37,17 @@ export const decodeService = (did: string, service: string, index: number): IDID
     return val;
 }
 
+export const isPeerDID = (did: string) => {
+    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]{46,47}))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]{46,47}))+(\.(S)[0-9a-zA-Z=]*)?)))$').test(did)
+}
+
 export const createDIDDocument = (
     did: string,
     authKeys: IDIDDocumentVerificationMethod[],
     encKeys: IDIDDocumentVerificationMethod[],
     services: IDIDDocumentServiceDescriptor[]
 ) => {
+    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
     const auth = authKeys.map(k => k.id);
     const enc = encKeys.map(k => k.id);
     const ver = [...authKeys, ...encKeys].map(k => ({
@@ -51,12 +56,20 @@ export const createDIDDocument = (
         controller: k.controller,
         publicKeyMultibase: k.publicKeyMultibase
     }))
-    return {
-        "@context": "https://w3id.org/did/v1",
+    let doc: any = {
         "id": did,
+        assertionMethod: auth,
         authentication: auth,
-        keyAgreement: enc,
+        capabilityDelegation: auth,
+        capabilityInvocation: auth,
         verificationMethod: ver,
-        service: services
     }
+    if (enc.length > 0) {
+        doc['keyAgreement'] = enc;
+        contexts.push("https://w3id.org/security/suites/x25519-2020/v1");
+    }
+    if (services.length > 0) {
+        doc['service'] = services
+    }
+    return {"@context": contexts, ...doc};
 }

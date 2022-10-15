@@ -1,38 +1,16 @@
-# create-svelte
+# Typescript `did:peer`
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This is a typescript implementation of the [did:peer](https://identity.foundation/peer-did-method-spec) method.
 
-## Creating a project
+> Currently it more correctly aligns with the python [peerdid](https://github.com/sicpa-dlab/peer-did-python) implementation of the method. Work is required to update the `did:peer` method to be conformant with [did-core](https://www.w3.org/TR/did-core/) and since this was created to interoperate with other `did:peer` didcomm participants interoperability has been chosen over spec correctness.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Assumptions and limitations
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+- Only static layers 1, 2a, 2b are supported
+- Only X25519 keys are supported for key agreement
+- Only Ed25519 keys are supported for authentication
+- Supported verification materials (input and in the resolved DID Document)
+  - [x] 2020 verification materials (Ed25519VerificationKey2020 and X25519KeyAgreementKey2020) with multibase base58 (publicKeyMultibase) public key encoding.
+  - [ ] JWK (JsonWebKey2020) using JWK (publicKeyJwk) public key encoding
+        2018/2019 verification materials (Ed25519VerificationKey2018 and X25519KeyAgreementKey2019)
+  - [ ] using base58 (publicKeyBase58) public key encoding.

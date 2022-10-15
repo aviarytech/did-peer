@@ -38,7 +38,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@aviarytech/crypto": "^0.0.33",
+		"@aviarytech/crypto": "^0.0.35",
 		"multiformats": "^10.0.0"
 	}
 }
