@@ -1,7 +1,7 @@
 import { assert } from "vitest";
-import { Numalgo2Prefixes } from "./constants";
-import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces";
-import { createDIDDocument, decodeService, isPeerDID } from "./utils";
+import { Numalgo2Prefixes } from "./constants.js";
+import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js";
+import { createDIDDocument, decodeService, isPeerDID } from "./utils.js";
 
 export const resolve = async (did: string): Promise<IDIDDocument> => {
     assert(isPeerDID(did), `${did} is not a valid did:peer`)

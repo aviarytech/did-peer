@@ -1,7 +1,7 @@
-import { Numalgo2Prefixes } from "./constants";
-import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces"
-import { encodeService } from "./utils";
-import { validateAuthentication, validateEncryption } from "./validators";
+import { Numalgo2Prefixes } from "./constants.js";
+import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js"
+import { encodeService } from "./utils.js";
+import { validateAuthentication, validateEncryption } from "./validators.js";
 
 export const create = async (
     numalgo: number,

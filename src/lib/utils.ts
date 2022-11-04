@@ -1,6 +1,6 @@
 import { Buffer } from 'buffer/index.js';
-import { Numalgo2Prefixes, ServiceReplacements } from "./constants";
-import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces";
+import { Numalgo2Prefixes, ServiceReplacements } from "./constants.js";
+import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js";
 
 
 export const base64 = {
