@@ -1,4 +1,3 @@
-import { Ed25519VerificationKey2020, X25519KeyAgreementKey2020 } from "@aviarytech/crypto";
 import { assert } from "vitest";
 import { Numalgo2Prefixes } from "./constants";
 import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces";
@@ -20,7 +19,12 @@ export const resolve = async (did: string): Promise<IDIDDocument> => {
 
 export const resolveNumAlgo0 = async (did: string): Promise<IDIDDocument> => {
     const multibaseKey = did.slice(10)
-    const key = new Ed25519VerificationKey2020(`#${multibaseKey.slice(1, 9)}`, did, multibaseKey)
+    const key = {
+        id: `#${multibaseKey.slice(1, 9)}`,
+        type: 'Ed25519VerificationKey2020',
+        controller: did,
+        publicKeyMultibase: multibaseKey
+    }
     return createDIDDocument(did, [key], [], []);
 }
 
@@ -38,10 +42,20 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
     keys.forEach(k => {
         switch (k.slice(0,1)) {
             case Numalgo2Prefixes.Authentication:
-                authKeys.push(new Ed25519VerificationKey2020(`#${k.slice(2, 10)}`, did, k.slice(1)))
+                authKeys.push({
+                    id: `#${k.slice(2, 10)}`,
+                    controller: did,
+                    type: 'Ed25519VerificationKey2020',
+                    publicKeyMultibase: k.slice(1)
+                })
                 break;
             case Numalgo2Prefixes.KeyAgreement:
-                encKeys.push(new X25519KeyAgreementKey2020(`#${k.slice(2, 10)}`, did, k.slice(1)))
+                encKeys.push({
+                    id: `#${k.slice(2, 10)}`,
+                    controller: did,
+                    type: 'X25519KeyAgreementKey2020',
+                    publicKeyMultibase: k.slice(1)
+                })
                 break;
             case Numalgo2Prefixes.Service:
                 services.push(decodeService(did, k.slice(1), serviceIndex))

@@ -1,6 +1,7 @@
 {
 	"name": "@aviarytech/did-peer",
 	"version": "0.0.1",
+	"type": "module",
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/",
 		"access": "public"
@@ -36,9 +37,7 @@
 		"vite": "^3.1.0",
 		"vitest": "^0.24.1"
 	},
-	"type": "module",
 	"dependencies": {
-		"@aviarytech/crypto": "^0.0.35",
-		"multiformats": "^10.0.0"
+		"buffer": "^6.0.3"
 	}
 }

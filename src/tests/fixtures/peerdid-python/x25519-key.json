@@ -1,0 +1,6 @@
+{
+  "id": "did:key:z6QNkWkNU8fphAmtZThvpPi3d54i2v1F4rZwv6tUhyMBPGCC#z6QNkWkNU8fphAmtZThvpPi3d54i2v1F4rZwv6tUhyMBPGCC",
+  "type": "X25519KeyAgreementKey2020",
+  "controller": "did:key:z6QNkWkNU8fphAmtZThvpPi3d54i2v1F4rZwv6tUhyMBPGCC",
+  "publicKeyMultibase": "zWKZk1YEsTjyQjwMpyrRixqgGVFvERBBc1b4C4kC4MPa"
+}
