@@ -59,12 +59,12 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: package
-          path: package
+          path: did-peer
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm publish --access public package
+      - run: npm publish --access public did-peer
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   
@@ -77,11 +77,11 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: package
-          path: package
+          path: did-peer
       - uses: actions/setup-node@v3
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/aviarytech
-      - run: npm publish --access public package
+      - run: npm publish --access public did-peer
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_github_token}}
