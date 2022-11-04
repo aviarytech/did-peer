@@ -24,12 +24,10 @@ jobs:
       - name: Commit changes
         run: |
           VERSION=${{ toJSON(steps.version.outputs.result) }}
-          BRANCH="master"
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git checkout -b $BRANCH
           git commit -am "Bump version to $VERSION"
-          git push --set-upstream origin $BRANCH
+          git push
 
   build:
     needs: bump-version
