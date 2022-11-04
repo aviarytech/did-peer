@@ -2,6 +2,9 @@ import { Buffer } from 'buffer/index.js';
 import { Numalgo2Prefixes, ServiceReplacements } from "./constants.js";
 import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js";
 
+export const assert = (exp: boolean, message: string) => {
+    if(!Boolean(exp)) throw new Error(message || 'unknown assertion error');
+}
 
 export const base64 = {
 	encode: (unencoded: any): string => {

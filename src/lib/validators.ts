@@ -1,5 +1,5 @@
-import assert from "assert";
 import type { IDIDDocumentVerificationMethod } from "./interfaces.js";
+import { assert } from "./utils.js";
 
 export const validateAuthentication = (verificationMethod: IDIDDocumentVerificationMethod) => {
     assert(['Ed25519VerificationKey2020'].includes(verificationMethod.type), 'verificationMethod type must be Ed25519VerificationKey2020')
