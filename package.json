@@ -34,6 +34,7 @@
 		"vitest": "^0.24.1"
 	},
 	"dependencies": {
+		"assert": "^2.0.0",
 		"buffer": "^6.0.3"
 	}
 }

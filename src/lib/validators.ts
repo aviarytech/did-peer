@@ -1,4 +1,4 @@
-import { assert } from "vitest";
+import assert from "assert";
 import type { IDIDDocumentVerificationMethod } from "./interfaces.js";
 
 export const validateAuthentication = (verificationMethod: IDIDDocumentVerificationMethod) => {
