@@ -45,9 +45,9 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm run build
-      - run: npm publish --access public --@myscope:registry=https://registry.npmjs.org/ package
+      - run: npm publish --access public --registry=https://registry.npmjs.org/ package
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - run: npm publish --access public --@myscope:registry=https://npm.pkg.github.com/aviarytech package
+      - run: npm publish --access public --registry=https://npm.pkg.github.com/aviarytech package
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_github_token}}
