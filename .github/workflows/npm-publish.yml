@@ -34,7 +34,7 @@ jobs:
       - run: npm ci
       - run: npm test
 
-  publish-npm:
+  publish:
     needs:
       - build
     runs-on: ubuntu-latest
@@ -43,23 +43,11 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-          registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - run: npm publish --access public
+      - run: npm run build
+      - run: npm publish --access public --@myscope:registry=https://registry.npmjs.org/ package
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-  
-  publish-github:
-    needs:
-      - build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://npm.pkg.github.com/aviarytech
-      - run: npm ci
-      - run: npm publish --access public
+      - run: npm publish --access public --@myscope:registry=https://npm.pkg.github.com/aviarytech package
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_github_token}}
