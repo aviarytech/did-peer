@@ -64,7 +64,8 @@ jobs:
         with:
           node-version: 16
           registry-url: https://registry.npmjs.org/
-      - run: npm publish --access public did-peer
+      - run: npm publish --access public
+        working-directory: did-peer
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
   
@@ -82,6 +83,7 @@ jobs:
         with:
           node-version: 16
           registry-url: https://npm.pkg.github.com/aviarytech
-      - run: npm publish --access public did-peer
+      - run: npm publish --access public
+        working-directory: did-peer
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_github_token}}
