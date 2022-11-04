@@ -14,3 +14,4 @@ This is a typescript implementation of the [did:peer](https://identity.foundatio
   - [ ] JWK (JsonWebKey2020) using JWK (publicKeyJwk) public key encoding
         2018/2019 verification materials (Ed25519VerificationKey2018 and X25519KeyAgreementKey2019)
   - [ ] using base58 (publicKeyBase58) public key encoding.
+
