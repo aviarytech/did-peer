@@ -9,7 +9,7 @@ on:
      - master
 
 jobs:
-  bump-version:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -28,13 +28,7 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git commit -am "Bump version to $VERSION"
           git push
-
-  build:
-    needs: bump-version
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3 
         with:
           node-version: 16
       - run: npm ci
