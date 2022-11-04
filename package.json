@@ -1,5 +1,5 @@
 {
-	"name": "did-peer",
+	"name": "@aviarytech/did-peer",
 	"version": "0.0.1",
 	"publishConfig": {
 		"registry": "https://npm.pkg.github.com/",
