@@ -72,7 +72,7 @@ export const decodeService = (did: string, service: string, index: number): IDID
 }
 
 export const isPeerDID = (did: string) => {
-    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]{46,47}))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]{46,47}))+(\.(S)[0-9a-zA-Z=]*)?)))$').test(did)
+    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]{44,47}))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]{44,47}))+(\.(S)[0-9a-zA-Z=]*)?)))$').test(did)
 }
 
 export const createDIDDocument = (
