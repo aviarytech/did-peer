@@ -84,6 +84,12 @@ export interface IJWK {
   
     /** The endpoint of this service, as a URI. */
     serviceEndpoint: string | IDIDDocumentServiceEndpoint | IDIDDocumentServiceEndpoint[];
+
+    /** The routing keys to be used */
+    routingKeys?: string[],
+    
+    /** The types of messages the service accepts */
+    accepts?: string[]
   }
   
   /**
