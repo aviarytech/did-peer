@@ -3,14 +3,14 @@
 	"id": "did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V",
 	"verificationMethod": [
 		{
-			"id": "#6MkqRYqQ",
+			"id": "did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V#6MkqRYqQ",
 			"type": "Ed25519VerificationKey2020",
 			"controller": "did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V",
 			"publicKeyMultibase": "z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V"
 		}
 	],
-	"authentication": ["#6MkqRYqQ"],
-	"assertionMethod": ["#6MkqRYqQ"],
-	"capabilityInvocation": ["#6MkqRYqQ"],
-	"capabilityDelegation": ["#6MkqRYqQ"]
+	"authentication": ["did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V#6MkqRYqQ"],
+	"assertionMethod": ["did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V#6MkqRYqQ"],
+	"capabilityInvocation": ["did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V#6MkqRYqQ"],
+	"capabilityDelegation": ["did:peer:0z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V#6MkqRYqQ"]
 }
