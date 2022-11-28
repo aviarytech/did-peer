@@ -1,6 +1,6 @@
 {
 	"name": "@aviarytech/did-peer",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"type": "module",
 	"scripts": {
 		"dev": "vite dev",
