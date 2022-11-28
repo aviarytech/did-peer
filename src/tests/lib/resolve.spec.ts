@@ -62,7 +62,7 @@ describe('resolveNumAlgo0', () => {
         expect(doc.verificationMethod![0].type).toBe('Ed25519VerificationKey2020')
         expect(doc.verificationMethod![0].publicKeyMultibase).toBe('z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH')
         expect(doc.authentication!.length).toBe(1)
-        expect(doc.authentication![0]).toBe(`${did}#6MkpTHR8`)
+        expect(doc.authentication![0]).toBe(`${did}#6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH`)
     })
 })
 

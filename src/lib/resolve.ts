@@ -19,7 +19,7 @@ export const resolve = async (did: string): Promise<IDIDDocument> => {
 export const resolveNumAlgo0 = async (did: string): Promise<IDIDDocument> => {
     const multibaseKey = did.slice(10)
     const key = {
-        id: `${did}#${multibaseKey.slice(1, 9)}`,
+        id: `${did}#${multibaseKey.slice(1)}`,
         type: 'Ed25519VerificationKey2020',
         controller: did,
         publicKeyMultibase: multibaseKey
@@ -42,7 +42,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
         switch (k.slice(0,1)) {
             case Numalgo2Prefixes.Authentication:
                 authKeys.push({
-                    id: `${did}#${k.slice(2, 10)}`,
+                    id: `${did}#${k.slice(2)}`,
                     controller: did,
                     type: 'Ed25519VerificationKey2020',
                     publicKeyMultibase: k.slice(1)
@@ -50,7 +50,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
                 break;
             case Numalgo2Prefixes.KeyAgreement:
                 encKeys.push({
-                    id: `${did}#${k.slice(2, 10)}`,
+                    id: `${did}#${k.slice(2)}`,
                     controller: did,
                     type: 'X25519KeyAgreementKey2020',
                     publicKeyMultibase: k.slice(1)
