@@ -28,7 +28,7 @@ describe('resolve', () => {
         const doc = await resolve('did:peer:0z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH')
         expect(doc).toBeTruthy()
     })
-    it('should create peer:did w/ numalgo1', async () => {
+    it('should resolve peer:did w/ numalgo1', async () => {
         try {
             const doc = await resolve('did:peer:1zQmZMygzYqNwU6Uhmewx5Xepf2VLp5S4HLSwwgf2aiKZuwa')
             expect(true).toBeFalsy()
@@ -40,6 +40,11 @@ describe('resolve', () => {
     it('should create peer:did w/ numalgo2', async () => {
         const doc = await resolve('did:peer:2.Ez6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.Vz6MkgoLTnTypo3tDRwCkZXSccTPHRLhF4ZnjhueYAFpEX6vg.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbmRwb2ludCIsInIiOlsiZGlkOmV4YW1wbGU6c29tZW1lZGlhdG9yI3NvbWVrZXkiXSwiYSI6WyJkaWRjb21tL3YyIiwiZGlkY29tbS9haXAyO2Vudj1yZmM1ODciXX0')
         expect(doc).toBeTruthy()
+    })
+
+    it('should resolve peer:did w/ serviceEndpoint object', async () => {
+        const doc = await resolve('did:peer:2.Ez6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJpZCI6ICIjZGlkY29tbSIsICJ0IjogImRtIiwgInMiOiB7InVyaSI6ICJodHRwOi8vZXhhbXBsZS5jb20iLCAiciI6IFsiZGlkOmV4YW1wbGU6MTIzIzQ1NiJdLCAiYSI6IFsiZGlkY29tbS92MiJdfX0')
+        expect(doc).toBeTruthy();
     })
 
     it('should fail if not peer:did', async () => {

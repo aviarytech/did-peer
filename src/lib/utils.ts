@@ -26,7 +26,7 @@ export const utf8 = {
 
 export const base64url = {
 	encode: (unencoded: any): string => {
-		var encoded = base64.encode(unencoded);
+		const encoded = base64.encode(unencoded);
 		return encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
 	},
 	decode: (encoded: any): Uint8Array => {
@@ -46,14 +46,30 @@ export const encodeService = (service: IDIDDocumentServiceDescriptor): string =>
 
 export const decodeService = (did: string, service: string, index: number): IDIDDocumentServiceDescriptor => {
     let val = JSON.parse(utf8.decode(base64url.decode(service)))
-    if (val.r) {
-        val['routingKeys'] = val.r;
-        delete val['r']
+    if (val.s) {
+        val['serviceEndpoint'] = val.s;
+        delete val['s']
     }
-    if (val.a) {
-        val['accept'] = val.a;
-        delete val['a'];
+    if (typeof val.serviceEndpoint === 'object') {
+        if (val.serviceEndpoint.r) {
+            val.serviceEndpoint['routingKeys'] = val.r;
+            delete val.serviceEndpoint['r']
+        }
+        if (val.serviceEndpoint.a) {
+            val.serviceEndpoint['accept'] = val.a;
+            delete val.serviceEndpoint['a'];
+        }
+    } else {
+        if (val.r) {
+            val['routingKeys'] = val.r;
+            delete val['r']
+        }
+        if (val.a) {
+            val['accept'] = val.a;
+            delete val['a'];
+        }
     }
+    
     if (val.t) {
         if (val.t === 'dm') {
             val.type = 'DIDCommMessaging'
@@ -63,10 +79,6 @@ export const decodeService = (did: string, service: string, index: number): IDID
             val.id = `#service-${index}`
         }
         delete val['t']
-    }
-    if (val.s) {
-        val['serviceEndpoint'] = val.s;
-        delete val['s']
     }
     return val;
 }

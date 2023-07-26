@@ -122,6 +122,29 @@ describe('createNumAlgo2', () => {
         expect(serv['r']).toStrictEqual(['did:example:123#456'])
         expect(serv['a']).toStrictEqual(['didcomm/v2'])
     })
+
+    it('should create valid peer:did with NumAlgo2 with service with serviceEndpoint object', async () => {
+        const service = {
+            'id': '#didcomm',
+            'type': 'DIDCommMessaging',
+            'serviceEndpoint': {
+                'uri': 'http://example.com',
+                'routingKeys': ['did:example:123#456'],
+                'accept': ['didcomm/v2']
+            }
+        }
+        const did = await createNumAlgo2([ed25519Key], undefined, service);
+        expect(did).toBeTruthy()
+        const segments = did.split('.');
+        const idx = segments.findIndex((s) => s.length > 1 && s[0] === 'S')
+        expect(segments[idx][0]).toBe('S')
+        const basedService = segments[idx].slice(1)
+        const serv = JSON.parse(utf8.decode(base64.decode(basedService)))
+        expect(serv['id']).toBe('#didcomm')
+        expect(serv['t']).toBe('dm')
+        expect(serv['s']).toStrictEqual({'uri':'http://example.com', 'r': ['did:example:123#456'], 'a': ['didcomm/v2']})
+    })
+    
     it('should require encryption key type X25519KeyAgreementKey2020', async () => {
         try {
             const did = await createNumAlgo2([ed25519Key], [ed25519Key]);
