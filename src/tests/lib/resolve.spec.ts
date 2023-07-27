@@ -44,6 +44,8 @@ describe('resolve', () => {
 
     it('should resolve peer:did w/ serviceEndpoint object', async () => {
         const doc = await resolve('did:peer:2.Ez6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc.Vz6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJpZCI6ICIjZGlkY29tbSIsICJ0IjogImRtIiwgInMiOiB7InVyaSI6ICJodHRwOi8vZXhhbXBsZS5jb20iLCAiciI6IFsiZGlkOmV4YW1wbGU6MTIzIzQ1NiJdLCAiYSI6IFsiZGlkY29tbS92MiJdfX0')
+        // @ts-ignore
+        expect(doc.service[0].serviceEndpoint.routingKeys).toStrictEqual(["did:example:123#456"]);
         expect(doc).toBeTruthy();
     })
 

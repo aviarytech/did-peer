@@ -45,19 +45,19 @@ export const encodeService = (service: IDIDDocumentServiceDescriptor): string =>
 }
 
 export const decodeService = (did: string, service: string, index: number): IDIDDocumentServiceDescriptor => {
-    let val = JSON.parse(utf8.decode(base64url.decode(service)))
+    const val = JSON.parse(utf8.decode(base64url.decode(service)))
     if (val.s) {
         val['serviceEndpoint'] = val.s;
         delete val['s']
     }
     if (typeof val.serviceEndpoint === 'object') {
         if (val.serviceEndpoint.r) {
-            val.serviceEndpoint['routingKeys'] = val.r;
-            delete val.serviceEndpoint['r']
+            val.serviceEndpoint['routingKeys'] = val.serviceEndpoint.r;
+            delete val.serviceEndpoint.r
         }
         if (val.serviceEndpoint.a) {
-            val.serviceEndpoint['accept'] = val.a;
-            delete val.serviceEndpoint['a'];
+            val.serviceEndpoint['accept'] = val.serviceEndpoint.a;
+            delete val.serviceEndpoint.a;
         }
     } else {
         if (val.r) {
