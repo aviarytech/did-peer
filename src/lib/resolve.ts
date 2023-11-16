@@ -36,7 +36,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
     let encKeys: IDIDDocumentVerificationMethod[] = [];
     let services: IDIDDocumentServiceDescriptor[] = [];
     let keys = did.split('.')
-    let serviceIndex = 0;
+    let serviceMetadata = {index: 0};
     delete keys[0];
     keys.forEach(k => {
         switch (k.slice(0,1)) {
@@ -57,8 +57,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
                 })
                 break;
             case Numalgo2Prefixes.Service:
-                services.push(decodeService(did, k.slice(1), serviceIndex))
-                serviceIndex++;
+                services.push(decodeService(did, k.slice(1), serviceMetadata))
                 break;
         }
     })

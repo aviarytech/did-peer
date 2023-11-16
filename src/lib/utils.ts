@@ -44,7 +44,7 @@ export const encodeService = (service: IDIDDocumentServiceDescriptor): string =>
     return `.${Numalgo2Prefixes.Service}${base64url.encode(encoded)}`
 }
 
-export const decodeService = (did: string, service: string, index: number): IDIDDocumentServiceDescriptor => {
+export const decodeService = (did: string, service: string, metadata: Record<string, any>): IDIDDocumentServiceDescriptor => {
     const val = JSON.parse(utf8.decode(base64url.decode(service)))
     if (val.s) {
         val['serviceEndpoint'] = val.s;
@@ -73,12 +73,18 @@ export const decodeService = (did: string, service: string, index: number): IDID
     if (val.t) {
         if (val.t === 'dm') {
             val.type = 'DIDCommMessaging'
-            val.id = `#didcommmessaging-${index}`
         } else {
             val.type = val.t;
-            val.id = `#service-${index}`
         }
         delete val['t']
+    }
+    if (!val.id) {
+        if (metadata.index == 0) {
+            val.id = `#service`;
+        } else {
+            val.id = `#service-${metadata.index}`;
+        }
+        metadata.index++;
     }
     return val;
 }
@@ -91,7 +97,7 @@ export const createDIDDocument = (
     did: string,
     authKeys: IDIDDocumentVerificationMethod[],
     encKeys: IDIDDocumentVerificationMethod[],
-    services: IDIDDocumentServiceDescriptor[]
+    services: IDIDDocumentServiceDescriptor[],
 ) => {
     let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
     const auth = authKeys.map(k => k.id);
