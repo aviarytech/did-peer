@@ -37,12 +37,13 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
     let services: IDIDDocumentServiceDescriptor[] = [];
     let keys = did.split('.')
     let serviceMetadata = {index: 0};
+    let keyIndex = 1;
     delete keys[0];
     keys.forEach(k => {
         switch (k.slice(0,1)) {
             case Numalgo2Prefixes.Authentication:
                 authKeys.push({
-                    id: `${did}#${k.slice(2)}`,
+                    id: `#key-${keyIndex++}`,
                     controller: did,
                     type: 'Ed25519VerificationKey2020',
                     publicKeyMultibase: k.slice(1)
@@ -50,7 +51,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
                 break;
             case Numalgo2Prefixes.KeyAgreement:
                 encKeys.push({
-                    id: `${did}#${k.slice(2)}`,
+                    id: `#key-${keyIndex++}`,
                     controller: did,
                     type: 'X25519KeyAgreementKey2020',
                     publicKeyMultibase: k.slice(1)
