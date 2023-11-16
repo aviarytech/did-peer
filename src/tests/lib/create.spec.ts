@@ -102,13 +102,13 @@ describe('createNumAlgo2', () => {
         }
     })
     it('should create valid peer:did with NumAlgo2 with service', async () => {
-        const service = {
+        const service = [{
             'id': '#didcomm',
             'type': 'DIDCommMessaging',
             'serviceEndpoint' :'http://example.com',
             'routingKeys': ['did:example:123#456'],
             'accept': ['didcomm/v2']
-        }
+        }]
         const did = await createNumAlgo2([ed25519Key], undefined, service);
         expect(did).toBeTruthy()
         const segments = did.split('.');
@@ -124,7 +124,7 @@ describe('createNumAlgo2', () => {
     })
 
     it('should create valid peer:did with NumAlgo2 with service with serviceEndpoint object', async () => {
-        const service = {
+        const service = [{
             'id': '#didcomm',
             'type': 'DIDCommMessaging',
             'serviceEndpoint': {
@@ -132,7 +132,7 @@ describe('createNumAlgo2', () => {
                 'routingKeys': ['did:example:123#456'],
                 'accept': ['didcomm/v2']
             }
-        }
+        }]
         const did = await createNumAlgo2([ed25519Key], undefined, service);
         expect(did).toBeTruthy()
         const segments = did.split('.');
