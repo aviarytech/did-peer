@@ -27,12 +27,6 @@
 	"keyAgreement": [
 		"#key-1"
 	],
-	"capabilityInvocation": [
-		"#key-2"
-	],
-	"capabilityDelegation": [
-		"#key-2"
-	],
 	"service": [
 		{
 			"id": "#service",

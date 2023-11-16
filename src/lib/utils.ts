@@ -117,9 +117,11 @@ export const createDIDDocument = (
         "id": did,
         assertionMethod: auth,
         authentication: auth,
-        capabilityDelegation: auth,
-        capabilityInvocation: auth,
         verificationMethod: ver,
+    }
+    if (didPeerNumalgo < 2) {
+        doc["capabilityDelegation"] = auth
+        doc["capabilityInvocation"] = auth
     }
     if (enc.length > 0) {
         doc['keyAgreement'] = enc;
