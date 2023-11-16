@@ -45,7 +45,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
                 authKeys.push({
                     id: `#key-${keyIndex++}`,
                     controller: did,
-                    type: 'Ed25519VerificationKey2020',
+                    type: 'Multikey',
                     publicKeyMultibase: k.slice(1)
                 })
                 break;
@@ -53,7 +53,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
                 encKeys.push({
                     id: `#key-${keyIndex++}`,
                     controller: did,
-                    type: 'X25519KeyAgreementKey2020',
+                    type: 'Multikey',
                     publicKeyMultibase: k.slice(1)
                 })
                 break;

@@ -99,7 +99,12 @@ export const createDIDDocument = (
     encKeys: IDIDDocumentVerificationMethod[],
     services: IDIDDocumentServiceDescriptor[],
 ) => {
-    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
+    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"]
+    const prefix = "did:peer:";
+    const didPeerNumalgo = parseInt(did.slice(prefix.length, prefix.length+1))
+    if (didPeerNumalgo < 2) {
+        contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
+    }
     const auth = authKeys.map(k => k.id);
     const enc = encKeys.map(k => k.id);
     const ver = [...authKeys, ...encKeys].map(k => ({
@@ -118,7 +123,9 @@ export const createDIDDocument = (
     }
     if (enc.length > 0) {
         doc['keyAgreement'] = enc;
-        contexts.push("https://w3id.org/security/suites/x25519-2020/v1");
+        if (didPeerNumalgo < 2) {
+            contexts.push("https://w3id.org/security/suites/x25519-2020/v1");
+        }
     }
     if (services.length > 0) {
         doc['service'] = services
