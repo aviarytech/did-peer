@@ -130,6 +130,7 @@ export const createDIDDocument = (
         }
     }
     if (services.length > 0) {
+        contexts.push({'@base': did})
         doc['service'] = services
     }
     return {"@context": contexts, ...doc};

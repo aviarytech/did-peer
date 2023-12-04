@@ -19,7 +19,7 @@
 			"accept": ["didcomm/v2", "didcomm/aip2;env=rfc587"]
 		},
 		{
-			"id": "a-very-unique-service",
+			"id": "#a-very-unique-service",
 			"type": "DIDCommMessaging",
 			"serviceEndpoint": "https://example.com/endpoint2",
 			"routingKeys": ["did:example:somemediator#somekey1"],
