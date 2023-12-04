@@ -99,7 +99,7 @@ export const createDIDDocument = (
     encKeys: IDIDDocumentVerificationMethod[],
     services: IDIDDocumentServiceDescriptor[]
 ) => {
-    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"]
+    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1", {"@base": did}]
     const prefix = "did:peer:";
     const didPeerNumalgo = parseInt(did.slice(prefix.length, prefix.length+1))
     if (didPeerNumalgo < 2) {
@@ -130,7 +130,6 @@ export const createDIDDocument = (
         }
     }
     if (services.length > 0) {
-        contexts.push({'@base': did})
         doc['service'] = services
     }
     return {"@context": contexts, ...doc};
