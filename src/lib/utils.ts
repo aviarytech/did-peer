@@ -79,7 +79,7 @@ export const decodeService = (did: string, service: string, metadata: Record<str
         delete val['t']
     }
     if (!val.id) {
-        if (metadata.index == 0) {
+        if (metadata.index === 0) {
             val.id = `#service`;
         } else {
             val.id = `#service-${metadata.index}`;
@@ -97,7 +97,7 @@ export const createDIDDocument = (
     did: string,
     authKeys: IDIDDocumentVerificationMethod[],
     encKeys: IDIDDocumentVerificationMethod[],
-    services: IDIDDocumentServiceDescriptor[],
+    services: IDIDDocumentServiceDescriptor[]
 ) => {
     let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1"]
     const prefix = "did:peer:";
