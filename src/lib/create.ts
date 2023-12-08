@@ -7,8 +7,11 @@ export const create = async (
     numalgo: number,
     authenticationKeys: IDIDDocumentVerificationMethod[],
     encryptionKeys?: IDIDDocumentVerificationMethod[],
-    service?: IDIDDocumentServiceDescriptor
+    service?: IDIDDocumentServiceDescriptor | IDIDDocumentServiceDescriptor[]
 ): Promise<string> => {
+    if (service && !Array.isArray(service)) {
+        service = [service];
+    }
     switch (numalgo) {
         case 0:
             return createNumAlgo0(authenticationKeys[0]);
@@ -33,12 +36,12 @@ export const createNumAlgo1 = async (): Promise<string> => {
 export const createNumAlgo2 = async (
     authenticationKeys: IDIDDocumentVerificationMethod[],
     encryptionKeys?: IDIDDocumentVerificationMethod[],
-    service?: IDIDDocumentServiceDescriptor
+    service?: IDIDDocumentServiceDescriptor[]
 ): Promise<string> => {
     authenticationKeys.forEach(k => validateAuthentication(k));
     encryptionKeys?.forEach(k => validateEncryption(k));
     const auth = authenticationKeys.map(k => `.${Numalgo2Prefixes.Authentication}${k.publicKeyMultibase}`)
     const enc = encryptionKeys ? encryptionKeys.map(k => `.${Numalgo2Prefixes.KeyAgreement}${k.publicKeyMultibase}`) : '';
-    const serv = service ? encodeService(service) : '';
+    const serv = service ? service?.map(s => encodeService(s)).join("") : '';
     return `did:peer:2${auth}${enc}${serv}`
 }

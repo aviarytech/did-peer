@@ -20,8 +20,8 @@ describe('resolve', () => {
         expectArrayEquivalence(resolvedDoc.keyAgreement as IDIDDocumentVerificationMethod[], inputDoc.keyAgreement);
         expectArrayEquivalence(resolvedDoc.authentication as IDIDDocumentVerificationMethod[], inputDoc.authentication);
         expectArrayEquivalence(resolvedDoc.assertionMethod as IDIDDocumentVerificationMethod[], inputDoc.assertionMethod);
-        expectArrayEquivalence(resolvedDoc.capabilityInvocation as IDIDDocumentVerificationMethod[], inputDoc.capabilityInvocation);
-        expectArrayEquivalence(resolvedDoc.capabilityDelegation as IDIDDocumentVerificationMethod[], inputDoc.capabilityDelegation);
+        expect(resolvedDoc.capabilityInvocation).toEqual(undefined);
+        expect(resolvedDoc.capabilityDelegation).toEqual(undefined);
         expectArrayEquivalence(resolvedDoc.service as IDIDDocumentServiceDescriptor[], inputDoc.service);
     })
     it('should resolve peer:did w/ numalgo0', async () => {

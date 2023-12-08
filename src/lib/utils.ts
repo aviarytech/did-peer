@@ -44,7 +44,7 @@ export const encodeService = (service: IDIDDocumentServiceDescriptor): string =>
     return `.${Numalgo2Prefixes.Service}${base64url.encode(encoded)}`
 }
 
-export const decodeService = (did: string, service: string, index: number): IDIDDocumentServiceDescriptor => {
+export const decodeService = (did: string, service: string, metadata: Record<string, any>): IDIDDocumentServiceDescriptor => {
     const val = JSON.parse(utf8.decode(base64url.decode(service)))
     if (val.s) {
         val['serviceEndpoint'] = val.s;
@@ -73,18 +73,24 @@ export const decodeService = (did: string, service: string, index: number): IDID
     if (val.t) {
         if (val.t === 'dm') {
             val.type = 'DIDCommMessaging'
-            val.id = `#didcommmessaging-${index}`
         } else {
             val.type = val.t;
-            val.id = `#service-${index}`
         }
         delete val['t']
+    }
+    if (!val.id) {
+        if (metadata.index === 0) {
+            val.id = `#service`;
+        } else {
+            val.id = `#service-${metadata.index}`;
+        }
+        metadata.index++;
     }
     return val;
 }
 
 export const isPeerDID = (did: string) => {
-    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(\.(S)[0-9a-zA-Z=]*)?)))$').test(did)
+    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(\.(S)[0-9a-zA-Z=]*)*)))$').test(did)
 }
 
 export const createDIDDocument = (
@@ -93,7 +99,12 @@ export const createDIDDocument = (
     encKeys: IDIDDocumentVerificationMethod[],
     services: IDIDDocumentServiceDescriptor[]
 ) => {
-    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
+    let contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/multikey/v1", {"@base": did}]
+    const prefix = "did:peer:";
+    const didPeerNumalgo = parseInt(did.slice(prefix.length, prefix.length+1))
+    if (didPeerNumalgo < 2) {
+        contexts = ["https://www.w3.org/ns/did/v1", "https://w3id.org/security/suites/ed25519-2020/v1"]
+    }
     const auth = authKeys.map(k => k.id);
     const enc = encKeys.map(k => k.id);
     const ver = [...authKeys, ...encKeys].map(k => ({
@@ -106,13 +117,17 @@ export const createDIDDocument = (
         "id": did,
         assertionMethod: auth,
         authentication: auth,
-        capabilityDelegation: auth,
-        capabilityInvocation: auth,
         verificationMethod: ver,
+    }
+    if (didPeerNumalgo < 2) {
+        doc["capabilityDelegation"] = auth
+        doc["capabilityInvocation"] = auth
     }
     if (enc.length > 0) {
         doc['keyAgreement'] = enc;
-        contexts.push("https://w3id.org/security/suites/x25519-2020/v1");
+        if (didPeerNumalgo < 2) {
+            contexts.push("https://w3id.org/security/suites/x25519-2020/v1");
+        }
     }
     if (services.length > 0) {
         doc['service'] = services

@@ -2,7 +2,7 @@
 	"signing_keys": [
 		{
 			"type": "Ed25519VerificationKey2020",
-			"publicKeyMultibase": "z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V.SeyJ0IjoiZG0iLCJzIjoiaHR0cHM6Ly9leGFtcGxlLmNvbS9lbmRwb2ludDEiLCJyIjpbImRpZDpleGFtcGxlOnNvbWVtZWRpYXRvciNzb21la2V5MSJdLCJhIjpbImRpZGNvbW0vdjIiLCJkaWRjb21tL2FpcDI7ZW52PXJmYzU4NyJdfQ"
+			"publicKeyMultibase": "z6MkqRYqQiSgvZQdnBytw86Qbs2ZWUkGv22od935YF4s8M7V"
 		}
 	],
 	"encryption_keys": [
@@ -11,10 +11,25 @@
 			"publicKeyMultibase": "z6LSpSrLxbAhg2SHwKk7kwpsH7DM7QjFS5iK6qP87eViohud"
 		}
 	],
-	"service": {
-		"type": "DIDCommMessaging",
-		"serviceEndpoint": "https://example.com/endpoint1",
-		"routingKeys": ["did:example:somemediator#somekey1"],
-		"accept": ["didcomm/v2", "didcomm/aip2;env=rfc587"]
-	}
+	"service": [
+		{
+			"type": "DIDCommMessaging",
+			"serviceEndpoint": "https://example.com/endpoint1",
+			"routingKeys": ["did:example:somemediator#somekey1"],
+			"accept": ["didcomm/v2", "didcomm/aip2;env=rfc587"]
+		},
+		{
+			"id": "#a-very-unique-service",
+			"type": "DIDCommMessaging",
+			"serviceEndpoint": "https://example.com/endpoint2",
+			"routingKeys": ["did:example:somemediator#somekey1"],
+			"accept": ["didcomm/v2", "didcomm/aip2;env=rfc587"]
+		},
+		{
+			"type": "DIDCommMessaging",
+			"serviceEndpoint": "https://example.com/endpoint3",
+			"routingKeys": ["did:example:somemediator#somekey1"],
+			"accept": ["didcomm/v2", "didcomm/aip2;env=rfc587"]
+		}
+	]
 }
