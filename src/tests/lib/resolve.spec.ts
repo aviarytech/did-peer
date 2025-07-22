@@ -1,7 +1,19 @@
-import { resolve, resolveNumAlgo0, resolveNumAlgo2 } from "../../lib";
+import { resolve, resolveNumAlgo0, resolveNumAlgo2, resolveNumAlgo4, resolveLongFormNumAlgo4 } from "../../lib";
 import { describe, it, expect } from "vitest";
 import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "$lib/interfaces";
 import { expectArrayEquivalence } from "./test-utils";
+import { createNumAlgo4 } from "../../lib";
+
+// Test keys for variant 4
+const multikeyEd25519 = {
+    type: 'Multikey',
+    publicKeyMultibase: 'z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH'
+}
+
+const multikeyX25519 = {
+    type: 'Multikey', 
+    publicKeyMultibase: 'z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc'
+}
 
 describe('resolve', () => {
     it('should resolve numalgo0 peer:did from test vectors', async () => {
@@ -49,6 +61,41 @@ describe('resolve', () => {
         expect(doc).toBeTruthy();
     })
 
+    it('should resolve peer:did w/ numalgo4 long form', async () => {
+        // Create a variant 4 DID and then resolve it
+        const did = await createNumAlgo4([multikeyEd25519])
+        const doc = await resolve(did)
+        expect(doc).toBeTruthy()
+        expect(doc.id).toBe(did)
+        expect(doc.verificationMethod).toBeTruthy()
+        expect(doc.verificationMethod!.length).toBe(1)
+        expect(doc.authentication).toBeTruthy()
+    })
+
+    it('should resolve peer:did w/ numalgo4 with encryption key', async () => {
+        const did = await createNumAlgo4([multikeyEd25519], [multikeyX25519])
+        const doc = await resolve(did)
+        expect(doc).toBeTruthy()
+        expect(doc.id).toBe(did)
+        expect(doc.verificationMethod!.length).toBe(2)
+        expect(doc.authentication).toBeTruthy()
+        expect(doc.keyAgreement).toBeTruthy()
+    })
+
+    it('should resolve peer:did w/ numalgo4 with service', async () => {
+        const service = [{
+            'id': '#didcomm',
+            'type': 'DIDCommMessaging',
+            'serviceEndpoint': 'http://example.com'
+        }]
+        const did = await createNumAlgo4([multikeyEd25519], undefined, service)
+        const doc = await resolve(did)
+        expect(doc).toBeTruthy()
+        expect(doc.service).toBeTruthy()
+        expect(doc.service!.length).toBe(1)
+        expect(doc.service![0].type).toBe('DIDCommMessaging')
+    })
+
     it('should fail if not peer:did', async () => {
         try {
             const doc = await resolve('did:example:123')
@@ -83,5 +130,75 @@ describe('resolveNumAlgo2', () => {
         expect(doc.authentication!.length).toBe(2)
         expect(doc.keyAgreement!.length).toBe(1)
         expect(doc.service!.length).toBe(1)        
+    })
+})
+
+describe('resolveNumAlgo4', () => {
+    it('should resolve long form variant 4 DID', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        const doc = await resolveNumAlgo4(did)
+        expect(doc).toBeTruthy()
+        expect(doc.id).toBe(did)
+        expect(doc.verificationMethod!.length).toBe(1)
+        expect(doc.authentication!.length).toBe(1)
+    })
+
+    it('should resolve variant 4 DID with encryption key', async () => {
+        const did = await createNumAlgo4([multikeyEd25519], [multikeyX25519]);
+        const doc = await resolveNumAlgo4(did)
+        expect(doc).toBeTruthy()
+        expect(doc.verificationMethod!.length).toBe(2)
+        expect(doc.authentication!.length).toBe(1)
+        expect(doc.keyAgreement!.length).toBe(1)
+    })
+
+    it('should include alsoKnownAs with short form', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        const doc = await resolveNumAlgo4(did)
+        expect(doc.alsoKnownAs).toBeTruthy()
+        expect(doc.alsoKnownAs!.length).toBeGreaterThan(0)
+        // Should contain the short form DID
+        const shortForm = doc.alsoKnownAs!.find(aka => aka.startsWith('did:peer:4z'))
+        expect(shortForm).toBeTruthy()
+    })
+
+    it('should throw error for short form DID without context', async () => {
+        try {
+            // Create a short form DID by extracting hash part
+            const longFormDid = await createNumAlgo4([multikeyEd25519]);
+            const parts = longFormDid.split(':')
+            const hashPart = parts[2] // The hash part includes the '4z' prefix
+            const shortFormDid = `did:peer:${hashPart}`
+            
+            await resolveNumAlgo4(shortFormDid)
+            expect(true).toBeFalsy()
+        } catch (e: any) {
+            expect(e.message).toContain('Short form did:peer:4 resolution requires')
+        }
+    })
+})
+
+describe('resolveLongFormNumAlgo4', () => {
+    it('should resolve long form variant 4 DID', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        const doc = await resolveLongFormNumAlgo4(did)
+        expect(doc).toBeTruthy()
+        expect(doc.id).toBe(did)
+    })
+
+    it('should verify hash correctly', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        const doc = await resolveLongFormNumAlgo4(did)
+        expect(doc).toBeTruthy()
+        // If no error is thrown, hash verification passed
+    })
+
+    it('should throw error for invalid format', async () => {
+        try {
+            await resolveLongFormNumAlgo4('did:peer:4invalidformat')
+            expect(true).toBeFalsy()
+        } catch (e: any) {
+            expect(e.message).toContain('Invalid')
+        }
     })
 })
