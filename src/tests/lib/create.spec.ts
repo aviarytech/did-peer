@@ -1,10 +1,21 @@
-import { create, createNumAlgo0, createNumAlgo2 } from '../../lib';
+import { create, createNumAlgo0, createNumAlgo2, createNumAlgo4 } from '../../lib';
 import { describe, expect, it } from 'vitest';
 import { expectArrayEquivalence } from './test-utils';
 import { base64, utf8 } from '$lib/utils';
 
 const ed25519Key = require('../fixtures/peerdid-python/ed25519-key.json')
 const x25519Key = require('../fixtures/peerdid-python/x25519-key.json')
+
+// Test key for variant 4
+const multikeyEd25519 = {
+    type: 'Multikey',
+    publicKeyMultibase: 'z6MkpTHR8VNsBxYAAWHut2Geadd9jSwuBV8xRoAnwWsdvktH'
+}
+
+const multikeyX25519 = {
+    type: 'Multikey', 
+    publicKeyMultibase: 'z6LSbysY2xFMRpGMhb7tFTLMpeuPRaqaWM1yECx2AtzE3KCc'
+}
 
 describe('create', () => {
     it('should create numalgo0 peer:did from test vectors', async () => {
@@ -37,6 +48,36 @@ describe('create', () => {
         const did = await create(2, [ed25519Key])
         expect(did).toBeTruthy()
     })
+
+    it('should create peer:did w/ numalgo4', async () => {
+        const did = await create(4, [multikeyEd25519])
+        expect(did).toBeTruthy()
+        expect(did.startsWith('did:peer:4')).toBe(true)
+        // Variant 4 long form DID has exactly 4 parts (did:peer:hash:document)
+        const parts = did.split(':')
+        expect(parts.length).toBe(4)
+        expect(parts[2].startsWith('4z')).toBe(true) // hash part starts with 4z
+        expect(parts[3].startsWith('z')).toBe(true) // document part starts with z
+    })
+
+    it('should create peer:did w/ numalgo4 with encryption key', async () => {
+        const did = await create(4, [multikeyEd25519], [multikeyX25519])
+        expect(did).toBeTruthy()
+        expect(did.startsWith('did:peer:4')).toBe(true)
+    })
+
+    it('should create peer:did w/ numalgo4 with service', async () => {
+        const service = [{
+            'id': '#didcomm',
+            'type': 'DIDCommMessaging',
+            'serviceEndpoint': 'http://example.com',
+            'routingKeys': ['did:example:123#456'],
+            'accept': ['didcomm/v2']
+        }]
+        const did = await create(4, [multikeyEd25519], undefined, service)
+        expect(did).toBeTruthy()
+        expect(did.startsWith('did:peer:4')).toBe(true)
+    })
 })
 
 describe('createNumAlgo0', () => {
@@ -51,7 +92,7 @@ describe('createNumAlgo0', () => {
             const did = await createNumAlgo0(x25519Key);
             expect(true).toBeFalsy()
         } catch (e: any) {
-            expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020')
+            expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020 or Multikey')
         }
     })
 })
@@ -69,7 +110,7 @@ describe('createNumAlgo2', () => {
             const did = await createNumAlgo2([x25519Key]);
             expect(true).toBeFalsy()
         } catch (e: any) {
-            expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020')
+            expect(e.message).toBe('verificationMethod type must be Ed25519VerificationKey2020 or Multikey')
         }
     })
     it('should create valid peer:did with NumAlgo2 with encryption', async () => {
@@ -89,7 +130,7 @@ describe('createNumAlgo2', () => {
             const did = await createNumAlgo2([ed25519Key], [ed25519Key]);
             expect(true).toBeFalsy()
         } catch (e: any) {
-            expect(e.message).toBe('verificationMethod type must be X25519KeyAgreementKey2020')
+            expect(e.message).toBe('verificationMethod type must be X25519KeyAgreementKey2020 or Multikey')
         }
     })
     it('should require encryption key publicKeyMultibase property', async () => {
@@ -150,7 +191,56 @@ describe('createNumAlgo2', () => {
             const did = await createNumAlgo2([ed25519Key], [ed25519Key]);
             expect(true).toBeFalsy()
         } catch (e: any) {
-            expect(e.message).toBe('verificationMethod type must be X25519KeyAgreementKey2020')
+            expect(e.message).toBe('verificationMethod type must be X25519KeyAgreementKey2020 or Multikey')
         }
+    })
+})
+
+describe('createNumAlgo4', () => {
+    it('should create valid peer:did with NumAlgo4', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        expect(did).toBeTruthy()
+        expect(did[9]).toBe('4')
+        expect(did.startsWith('did:peer:4z')).toBe(true)
+        // Verify it's a long form DID with hash and document (4 parts total)
+        const parts = did.split(':')
+        expect(parts.length).toBe(4)
+        expect(parts[2].startsWith('4z')).toBe(true)
+        expect(parts[3].startsWith('z')).toBe(true)
+    })
+
+    it('should create valid peer:did with NumAlgo4 with encryption key', async () => {
+        const did = await createNumAlgo4([multikeyEd25519], [multikeyX25519]);
+        expect(did).toBeTruthy()
+        expect(did[9]).toBe('4')
+        // Should contain encoded document
+        expect(did).toContain(':z')
+    })
+
+    it('should create consistent DIDs for same input', async () => {
+        const did1 = await createNumAlgo4([multikeyEd25519]);
+        const did2 = await createNumAlgo4([multikeyEd25519]);
+        expect(did1).toBe(did2)
+    })
+
+    it('should create valid peer:did with NumAlgo4 with service', async () => {
+        const service = [{
+            'id': '#didcomm',
+            'type': 'DIDCommMessaging',
+            'serviceEndpoint': 'http://example.com'
+        }]
+        const did = await createNumAlgo4([multikeyEd25519], undefined, service);
+        expect(did).toBeTruthy()
+        expect(did[9]).toBe('4')
+    })
+
+    it('should accept Multikey type for authentication', async () => {
+        const did = await createNumAlgo4([multikeyEd25519]);
+        expect(did).toBeTruthy()
+    })
+
+    it('should accept Multikey type for encryption', async () => {
+        const did = await createNumAlgo4([multikeyEd25519], [multikeyX25519]);
+        expect(did).toBeTruthy()
     })
 })

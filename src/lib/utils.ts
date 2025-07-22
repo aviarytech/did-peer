@@ -90,7 +90,14 @@ export const decodeService = (did: string, service: string, metadata: Record<str
 }
 
 export const isPeerDID = (did: string) => {
-    return new RegExp('^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(\.(S)[0-9a-zA-Z=]*)*)))$').test(did)
+    // Updated regex to support variant 4 long form DIDs
+    // Original patterns for variants 0, 1, 2
+    const variant012Pattern = '^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(\.(S)[0-9a-zA-Z=]*)*)))$';
+    
+    // Variant 4 pattern - can be short form (did:peer:4z...) or long form (did:peer:4z...:z...)
+    const variant4Pattern = '^did:peer:4z[1-9a-km-zA-HJ-NP-Z]*(:[a-zA-Z0-9]+)*$';
+    
+    return new RegExp(variant012Pattern).test(did) || new RegExp(variant4Pattern).test(did);
 }
 
 export const createDIDDocument = (

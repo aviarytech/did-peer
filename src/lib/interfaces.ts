@@ -105,8 +105,8 @@ export interface IJWK {
     /** The controller of the DID */
     controller?: string;
   
-    /** This DID is also known as */
-    alsoKnownAs?: string;
+    /** This DID is also known as - array of alternative identifiers */
+    alsoKnownAs?: string[];
   
     /** Array of verification methods associated with the DID. */
     verificationMethod?: IDIDDocumentVerificationMethod[];
