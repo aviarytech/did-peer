@@ -162,7 +162,7 @@ describe('resolveNumAlgo4', () => {
         expect(shortForm).toBeTruthy()
     })
 
-    it('should throw error for short form DID without context', async () => {
+    it('should throw error for short form DID without repository', async () => {
         try {
             // Create a short form DID by extracting hash part
             const longFormDid = await createNumAlgo4([multikeyEd25519]);
@@ -173,7 +173,7 @@ describe('resolveNumAlgo4', () => {
             await resolveNumAlgo4(shortFormDid)
             expect(true).toBeFalsy()
         } catch (e: any) {
-            expect(e.message).toContain('Short form did:peer:4 resolution requires')
+            expect(e.message).toContain('Short form did:peer:4 resolution requires a DID repository')
         }
     })
 })

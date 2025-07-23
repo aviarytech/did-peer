@@ -126,6 +126,33 @@ export interface IJWK {
     /** Array of capability invocation methods */
     capabilityInvocation?: IDIDDocumentVerificationMethod[] | string[];
   
-    /** Array of capability delegation methods */
-    capabilityDelegation?: IDIDDocumentVerificationMethod[] | string[];
-  }
+      /** Array of capability delegation methods */
+  capabilityDelegation?: IDIDDocumentVerificationMethod[] | string[];
+}
+
+/**
+ * Repository interface for storing and retrieving DID documents.
+ * Implementations can use different storage backends (memory, database, filesystem, etc.)
+ */
+export interface IDIDRepository {
+  /** 
+   * Store a long form DID document by its short form DID 
+   * @param shortFormDid The short form DID to use as key
+   * @param longFormDid The long form DID containing the full document
+   */
+  store(shortFormDid: string, longFormDid: string): Promise<void>;
+  
+  /** 
+   * Retrieve a long form DID document by its short form DID
+   * @param shortFormDid The short form DID to look up
+   * @returns The corresponding long form DID, or null if not found
+   */
+  retrieve(shortFormDid: string): Promise<string | null>;
+  
+  /** 
+   * Check if a short form DID exists in the repository
+   * @param shortFormDid The short form DID to check
+   * @returns True if the DID exists, false otherwise
+   */
+  exists(shortFormDid: string): Promise<boolean>;
+}

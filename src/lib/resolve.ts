@@ -1,9 +1,9 @@
 import { Numalgo2Prefixes, VARIANT_4_PREFIX, JSON_MULTICODEC_PREFIX, SHA256_MULTIHASH_PREFIX, SHA256_HASH_LENGTH, MULTIBASE_BASE58BTC_PREFIX } from "./constants.js";
-import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js";
+import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod, IDIDRepository } from "./interfaces.js";
 import { assert, createDIDDocument, decodeService, isPeerDID } from "./utils.js";
 import { createHash } from 'crypto';
 
-export const resolve = async (did: string): Promise<IDIDDocument> => {
+export const resolve = async (did: string, repository?: IDIDRepository): Promise<IDIDDocument> => {
     assert(isPeerDID(did), `${did} is not a valid did:peer`)
     switch(did.slice(9,10)) {
         case '0':
@@ -13,7 +13,7 @@ export const resolve = async (did: string): Promise<IDIDDocument> => {
         case '2':
             return resolveNumAlgo2(did);
         case '4':
-            return resolveNumAlgo4(did);
+            return resolveNumAlgo4(did, repository);
         default:
             throw new Error(`numalgo ${did.slice(9,10)} not recognized`);
     }
@@ -68,7 +68,7 @@ export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
     return createDIDDocument(did, authKeys, encKeys, services)
 }
 
-export const resolveNumAlgo4 = async (did: string): Promise<IDIDDocument> => {
+export const resolveNumAlgo4 = async (did: string, repository?: IDIDRepository): Promise<IDIDDocument> => {
     // Check if this is a long form or short form DID
     const parts = did.split(':');
     if (parts.length < 3) {
@@ -82,7 +82,7 @@ export const resolveNumAlgo4 = async (did: string): Promise<IDIDDocument> => {
     if (isLongForm) {
         return resolveLongFormNumAlgo4(did);
     } else {
-        return resolveShortFormNumAlgo4(did);
+        return resolveShortFormNumAlgo4(did, repository);
     }
 }
 
@@ -118,11 +118,27 @@ export const resolveLongFormNumAlgo4 = async (did: string): Promise<IDIDDocument
     return contextualizeDocument(decodedDocument, did, shortFormDid);
 }
 
-export const resolveShortFormNumAlgo4 = async (did: string): Promise<IDIDDocument> => {
-    // For short form resolution, we need the original long form document
-    // This implementation assumes the document is stored/cached somewhere
-    // In a real implementation, you would need to retrieve the document from storage
-    throw new Error('Short form did:peer:4 resolution requires the original long form document to be known');
+export const resolveShortFormNumAlgo4 = async (did: string, repository?: IDIDRepository): Promise<IDIDDocument> => {
+    if (!repository) {
+        throw new Error('Short form did:peer:4 resolution requires a DID repository to be provided');
+    }
+    
+    // Retrieve the long form DID from the repository
+    const longFormDid = await repository.retrieve(did);
+    if (!longFormDid) {
+        throw new Error(`Short form DID ${did} not found in repository`);
+    }
+    
+    // Resolve the long form DID and return the document
+    // The resolved document will have the long form DID as the id, but we need to set it to the short form
+    const doc = await resolveLongFormNumAlgo4(longFormDid);
+    
+    // Update the document id to be the short form DID
+    return {
+        ...doc,
+        id: did,
+        alsoKnownAs: [longFormDid] // Long form DID goes in alsoKnownAs for short form resolution
+    };
 }
 
 // Helper function to decode variant 4 document
