@@ -2,6 +2,14 @@
 	"name": "@aviarytech/did-peer",
 	"version": "0.0.24",
 	"type": "module",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/aviarytech/did-peer.git"
+	},
+	"bugs": {
+		"url": "https://github.com/aviarytech/did-peer/issues"
+	},
+	"homepage": "https://github.com/aviarytech/did-peer#readme",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "svelte-kit sync && svelte-package",
@@ -10,11 +18,14 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write .",
-		"package": "svelte-package",
-		"shipit": "npm run package && pushd package && npm publish && popd"
+		"package": "svelte-package"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.25.0",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^11.0.3",
+		"@semantic-release/npm": "^12.0.2",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"@sveltejs/package": "^1.0.0-next.1",
@@ -25,6 +36,7 @@
 		"eslint-plugin-svelte3": "^4.0.0",
 		"prettier": "^2.6.2",
 		"prettier-plugin-svelte": "^2.7.0",
+		"semantic-release": "^24.2.7",
 		"svelte": "^3.44.0",
 		"svelte-check": "^2.7.1",
 		"svelte-preprocess": "^4.10.6",
