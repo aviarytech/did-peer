@@ -15,4 +15,21 @@ This is a typescript implementation of the [did:peer](https://identity.foundatio
         2018/2019 verification materials (Ed25519VerificationKey2018 and X25519KeyAgreementKey2019)
   - [ ] using base58 (publicKeyBase58) public key encoding.
 
+## Development and Releases
+
+This project uses [semantic-release](https://semantic-release.gitbook.io/) for automated versioning and publishing. When commits are pushed to the main branch, semantic-release will:
+
+- Analyze commit messages to determine the version bump (patch, minor, major)
+- Generate a changelog
+- Create a GitHub release
+- Publish to npm
+
+### Commit Message Format
+
+Please use [conventional commits](https://www.conventionalcommits.org/) format:
+
+- `feat:` new features (minor version bump)
+- `fix:` bug fixes (patch version bump) 
+- `feat!:` or `fix!:` breaking changes (major version bump)
+- `docs:`, `chore:`, `style:`, `refactor:`, `test:` no version bump
 
