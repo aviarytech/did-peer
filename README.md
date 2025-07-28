@@ -32,4 +32,3 @@ Please use [conventional commits](https://www.conventionalcommits.org/) format:
 - `fix:` bug fixes (patch version bump) 
 - `feat!:` or `fix!:` breaking changes (major version bump)
 - `docs:`, `chore:`, `style:`, `refactor:`, `test:` no version bump
-
