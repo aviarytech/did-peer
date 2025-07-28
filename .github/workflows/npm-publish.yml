@@ -32,15 +32,6 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Debug NPM_TOKEN
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Token length: ${#NPM_TOKEN}"
-          echo "Token starts with: ${NPM_TOKEN:0:5}"
-          npm config set //registry.npmjs.org/:_authToken=$NPM_TOKEN
-          npm whoami
-
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
