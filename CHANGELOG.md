@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/aviarytech/did-peer/compare/v1.0.1...v1.0.2) (2025-07-28)
+
+
+### Bug Fixes
+
+* Update semantic-release configuration for npm publishing ([9cb0a9c](https://github.com/aviarytech/did-peer/commit/9cb0a9c59e929aec97b49d5db7f2072e50c26f46))
+
 ## [1.0.1](https://github.com/aviarytech/did-peer/compare/v1.0.0...v1.0.1) (2025-07-28)
 
 
