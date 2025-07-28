@@ -10,6 +10,9 @@
 		"url": "https://github.com/aviarytech/did-peer/issues"
 	},
 	"homepage": "https://github.com/aviarytech/did-peer#readme",
+	"publishConfig": {
+		"directory": "package"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "svelte-kit sync && svelte-package",
