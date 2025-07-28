@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/aviarytech/did-peer/compare/v1.0.0...v1.0.1) (2025-07-28)
+
+
+### Bug Fixes
+
+* Remove debug step for NPM_TOKEN in npm-publish workflow ([b5f2834](https://github.com/aviarytech/did-peer/commit/b5f2834d1c3c24d4ec2fcdc419dd3bc9b3566633))
+
 # 1.0.0 (2025-07-28)
 
 
