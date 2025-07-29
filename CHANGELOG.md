@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/aviarytech/did-peer/compare/v1.1.1...v1.1.2) (2025-07-29)
+
+
+### Bug Fixes
+
+* Consolidate utility functions and improve code clarity ([3a20c92](https://github.com/aviarytech/did-peer/commit/3a20c9226c370cbb81cbc476efa123970e93321a))
+
 ## [1.1.1](https://github.com/aviarytech/did-peer/compare/v1.1.0...v1.1.1) (2025-07-29)
 
 
