@@ -98,15 +98,15 @@ export const createNumAlgo4 = async (
     // Step 1: Encode the document
     const jsonString = JSON.stringify(inputDoc);
     const jsonBytes = new TextEncoder().encode(jsonString);
-    
+
     // Add multicodec prefix for JSON
-    // const jsonMulticodecBytes = encodeVarint(JSON_MULTICODEC_PREFIX);
-    // const prefixedBytes = new Uint8Array(jsonMulticodecBytes.length + jsonBytes.length);
-    // prefixedBytes.set(jsonMulticodecBytes);
-    // prefixedBytes.set(jsonBytes, jsonMulticodecBytes.length);
+    const jsonMulticodecBytes = encodeVarint(JSON_MULTICODEC_PREFIX);
+    const prefixedBytes = new Uint8Array(jsonMulticodecBytes.length + jsonBytes.length);
+    prefixedBytes.set(jsonMulticodecBytes);
+    prefixedBytes.set(jsonBytes, jsonMulticodecBytes.length);
     
-    // Multibase encode as base58btc
-    const encodedDocument = MULTIBASE_BASE58BTC_PREFIX + base58Encode(jsonBytes);
+    // Multibase encode as base58btc (include the multicodec prefix)
+    const encodedDocument = MULTIBASE_BASE58BTC_PREFIX + base58Encode(prefixedBytes);
 
     // Step 2: Hash the document
     const hash = createHash('sha256').update(encodedDocument).digest();
