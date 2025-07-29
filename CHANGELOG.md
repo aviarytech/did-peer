@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/aviarytech/did-peer/compare/v1.0.2...v1.1.0) (2025-07-29)
+
+
+### Features
+
+* Allow additional custom properties on service descriptors ([5463353](https://github.com/aviarytech/did-peer/commit/54633530261730a6b9a69d06f7ac68cdcccf41d6))
+
 ## [1.0.2](https://github.com/aviarytech/did-peer/compare/v1.0.1...v1.0.2) (2025-07-28)
 
 
