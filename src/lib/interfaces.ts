@@ -90,6 +90,12 @@ export interface IJWK {
     
     /** The types of messages the service accepts */
     accepts?: string[]
+    /**
+     * Allow additional custom properties on service descriptors. This is required
+     * for interoperability with services whose specification extends the base
+     * definition with extra fields not (yet) known to this library.
+     */
+    [propName: string]: unknown;
   }
   
   /**
