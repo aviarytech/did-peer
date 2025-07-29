@@ -1,3 +1,11 @@
+## [1.1.1](https://github.com/aviarytech/did-peer/compare/v1.1.0...v1.1.1) (2025-07-29)
+
+
+### Bug Fixes
+
+* Restore multicodec prefix handling in createNumAlgo4 function ([dcb3f4c](https://github.com/aviarytech/did-peer/commit/dcb3f4c8410c3424bbbafb3c1518c2f1cdf7d32e))
+* Simplify JSON encoding in createNumAlgo4 function ([b771697](https://github.com/aviarytech/did-peer/commit/b77169762369557ecaa2d90cd8a8e7470ffa1f5d))
+
 # [1.1.0](https://github.com/aviarytech/did-peer/compare/v1.0.2...v1.1.0) (2025-07-29)
 
 
