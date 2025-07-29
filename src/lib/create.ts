@@ -1,6 +1,6 @@
 import { Numalgo2Prefixes, VARIANT_4_PREFIX, JSON_MULTICODEC_PREFIX, SHA256_MULTIHASH_PREFIX, SHA256_HASH_LENGTH, MULTIBASE_BASE58BTC_PREFIX } from "./constants.js";
 import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js"
-import { encodeService } from "./utils.js";
+import { base58Encode, encodeService, encodeVarint } from "./utils.js";
 import { validateAuthentication, validateEncryption } from "./validators.js";
 import { createHash } from 'crypto';
 
@@ -122,36 +122,4 @@ export const createNumAlgo4 = async (
 
     // Step 3: Construct the DID
     return `did:peer:${VARIANT_4_PREFIX}${hashString}:${encodedDocument}`;
-}
-
-// Helper function to encode varint
-function encodeVarint(value: number): Uint8Array {
-    const bytes: number[] = [];
-    while (value >= 0x80) {
-        bytes.push((value & 0xFF) | 0x80);
-        value >>>= 7;
-    }
-    bytes.push(value & 0xFF);
-    return new Uint8Array(bytes);
-}
-
-// Helper function for base58 encoding
-function base58Encode(bytes: Uint8Array): string {
-    const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    let num = BigInt('0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''));
-    
-    if (num === 0n) return alphabet[0];
-    
-    let result = '';
-    while (num > 0n) {
-        result = alphabet[Number(num % 58n)] + result;
-        num = num / 58n;
-    }
-    
-    // Add leading zeros
-    for (let i = 0; i < bytes.length && bytes[i] === 0; i++) {
-        result = alphabet[0] + result;
-    }
-    
-    return result;
 }

@@ -3,7 +3,7 @@ import { Numalgo2Prefixes, ServiceReplacements } from "./constants.js";
 import type { IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod } from "./interfaces.js";
 
 export const assert = (exp: boolean, message: string) => {
-    if(!Boolean(exp)) throw new Error(message || 'unknown assertion error');
+    if(!exp) throw new Error(message || 'unknown assertion error');
 }
 
 export const base64 = {
@@ -92,7 +92,7 @@ export const decodeService = (did: string, service: string, metadata: Record<str
 export const isPeerDID = (did: string) => {
     // Updated regex to support variant 4 long form DIDs
     // Original patterns for variants 0, 1, 2
-    const variant012Pattern = '^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((\.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(\.(S)[0-9a-zA-Z=]*)*)))$';
+    const variant012Pattern = '^did:peer:(([01](z)([1-9a-km-zA-HJ-NP-Z]*))|(2((.[AEVID](z)([1-9a-km-zA-HJ-NP-Z]*))+(.(S)[0-9a-zA-Z=]*)*)))$';
     
     // Variant 4 pattern - can be short form (did:peer:4z...) or long form (did:peer:4z...:z...)
     const variant4Pattern = '^did:peer:4z[1-9a-km-zA-HJ-NP-Z]*(:[a-zA-Z0-9]+)*$';
@@ -120,7 +120,7 @@ export const createDIDDocument = (
         controller: k.controller,
         publicKeyMultibase: k.publicKeyMultibase
     }))
-    let doc: any = {
+    const doc: any = {
         "id": did,
         assertionMethod: auth,
         authentication: auth,
@@ -140,4 +140,60 @@ export const createDIDDocument = (
         doc['service'] = services
     }
     return {"@context": contexts, ...doc};
+}
+
+// Helper function to encode varint
+export const encodeVarint = (value: number): Uint8Array => {
+    const bytes: number[] = [];
+    while (value >= 0x80) {
+        bytes.push((value & 0xFF) | 0x80);
+        value >>>= 7;
+    }
+    bytes.push(value & 0xFF);
+    return new Uint8Array(bytes);
+}
+
+// Helper to decode unsigned varints (LEB128)
+export const decodeVarint = (
+    bytes: Uint8Array
+): { value: number; bytes: Uint8Array } => {
+    let value = 0;
+    let shift = 0;
+    let index = 0;
+
+    while (index < bytes.length) {
+        const byte = bytes[index++];
+        value |= (byte & 0x7F) << shift;
+        shift += 7;
+
+        // If the continuation bit is not set, we're done
+        if ((byte & 0x80) === 0) {
+            break;
+        }
+    }
+
+    return {
+        value,
+        bytes: bytes.slice(index)
+    };
+};
+
+export const base58Encode = (bytes: Uint8Array): string => {
+    const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    let num = BigInt('0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''));
+    
+    if (num === 0n) return alphabet[0];
+    
+    let result = '';
+    while (num > 0n) {
+        result = alphabet[Number(num % 58n)] + result;
+        num = num / 58n;
+    }
+    
+    // Add leading zeros
+    for (let i = 0; i < bytes.length && bytes[i] === 0; i++) {
+        result = alphabet[0] + result;
+    }
+    
+    return result;
 }

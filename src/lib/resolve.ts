@@ -1,6 +1,6 @@
 import { Numalgo2Prefixes, VARIANT_4_PREFIX, JSON_MULTICODEC_PREFIX, SHA256_MULTIHASH_PREFIX, SHA256_HASH_LENGTH, MULTIBASE_BASE58BTC_PREFIX } from "./constants.js";
 import type { IDIDDocument, IDIDDocumentServiceDescriptor, IDIDDocumentVerificationMethod, IDIDRepository } from "./interfaces.js";
-import { assert, createDIDDocument, decodeService, isPeerDID } from "./utils.js";
+import { assert, base58Encode, createDIDDocument, decodeService, isPeerDID } from "./utils.js";
 import { createHash } from 'crypto';
 
 export const resolve = async (did: string, repository?: IDIDRepository): Promise<IDIDDocument> => {
@@ -35,11 +35,11 @@ export const resolveNumAlgo1 = async (did: string): Promise<IDIDDocument> => {
 }
 
 export const resolveNumAlgo2 = async (did: string): Promise<IDIDDocument> => {
-    let authKeys: IDIDDocumentVerificationMethod[] = [];
-    let encKeys: IDIDDocumentVerificationMethod[] = [];
-    let services: IDIDDocumentServiceDescriptor[] = [];
-    let keys = did.split('.')
-    let serviceMetadata = {index: 0};
+    const authKeys: IDIDDocumentVerificationMethod[] = [];
+    const encKeys: IDIDDocumentVerificationMethod[] = [];
+    const services: IDIDDocumentServiceDescriptor[] = [];
+    const keys = did.split('.')
+    const serviceMetadata = {index: 0};
     let keyIndex = 1;
     delete keys[0];
     keys.forEach(k => {
@@ -257,25 +257,4 @@ function decodeVarint(bytes: Uint8Array): { value: number; bytes: Uint8Array } {
         value,
         bytes: bytes.slice(index)
     };
-}
-
-// Helper function for base58 encoding (reused from create.ts)
-function base58Encode(bytes: Uint8Array): string {
-    const alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    let num = BigInt('0x' + Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''));
-    
-    if (num === 0n) return alphabet[0];
-    
-    let result = '';
-    while (num > 0n) {
-        result = alphabet[Number(num % 58n)] + result;
-        num = num / 58n;
-    }
-    
-    // Add leading zeros
-    for (let i = 0; i < bytes.length && bytes[i] === 0; i++) {
-        result = alphabet[0] + result;
-    }
-    
-    return result;
 }
